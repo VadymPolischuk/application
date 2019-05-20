@@ -11,12 +11,9 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button loadButton;
-    TextView tv1;
-    TextView tv2;
-    TextView tv3;
-    String[] bb;
-    String string;
+     Button loadButton;
+     String[] bb = new String[10];
+     static String string;
     static int i = -1;
 
 
@@ -24,27 +21,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadButton = findViewById(R.id.saveButton);
+        loadButton = this.<Button>findViewById(R.id.loadButton);
         loadButton.setOnClickListener(this);
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        string = getIntent().getStringExtra("t1")+"|"+getIntent().getStringExtra("t2")+"|"+
-        getIntent().getStringExtra("t3");
-        i++;
-        if(i==9 || i<0)
-        {
-            onPause();
-        }
-        bb[i]+=string;
-        ListView Lists = findViewById(R.id.Lists);
-        ArrayAdapter<String> adapter;
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, bb);
-        Lists.setAdapter(adapter);
 
+        if (getIntent().getStringExtra("t3") == null)
+        {
+            return;
+        }
+
+        else {
+            string = getIntent().getStringExtra("tv1") + "|" + getIntent().getStringExtra("tv2") + "|" +
+                    getIntent().getStringExtra("tv3");
+            i = i + 1;
+            if (i == 9 || i < 0) {
+                i = 0;
+                onPause();
+            }
+            bb[i] += string;
+            ListView Lists = findViewById(R.id.Lists);
+            ArrayAdapter<String> adapter;
+            adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, bb);
+            Lists.setAdapter(adapter);
+        }
 
 
     }
@@ -55,8 +61,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             case R.id.loadButton:
                 Intent intent = new Intent(this, Main2Activity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                break;
+                default:
+                    break;
+
         }
 
     }
